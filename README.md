@@ -1,6 +1,4 @@
-# Pitstop engineering workshop
-This document describes an engineering workshop that can be used for training .NET engineers and getting them up to speed on several cloud-native software-architecture aspects and how to develop and run software using containerization technologies like Docker and Kubernetes.
-
+# Cloud-native Architecture workshop
 In most workshops you start from scratch, but in this workshop you will actually start with a complete working solution called Pitstop. You will learn by executing several labs in which you will be adding functionality to the solution.
 
 Pitstop is an open-source .NET Core sample application that demonstrates the following software-architecture aspects:
@@ -12,12 +10,7 @@ Pitstop is an open-source .NET Core sample application that demonstrates the fol
 - CQRS
 - Event-sourcing
 
-Also, Pitstop demonstrates how to develop and deploy applications using several deployment technologies:
-
-- Docker
-- Docker-compose
-- Kubernetes
-- Service-mesh (Istio & Linkerd)
+Also, Pitstop demonstrates how to develop and deploy applications using Docker containers.
 
 # Labs
 In order to complete the labs, make sure you read (at least) the following sections of the [Pitstop wiki on Github](https://github.com/EdwinVW/pitstop/wiki):
@@ -60,7 +53,7 @@ This workshop assumes you are working with Visual Studio Code.
 Download link: <a href="https://visualstudio.microsoft.com/downloads" target="_blank">Visual Studio Code</a>
 
 #### .NET Core SDK
-Install the .NET Core SDK version 3.0. 
+Install the .NET Core SDK version 3.1. 
 
 Download link: <a href="https://www.microsoft.com/net/download" target="_blank">.NET Core SDK</a>
 
@@ -101,22 +94,14 @@ In order to run the application, follow the instructions in the <a href="https:/
 ### Step 1.4: Get to know the solution
 In order to get to know the functionality of the application, make sure you have read the introduction of the solution in the repo's README file up to the *Technology* section. After that, follow the <a href="https://github.com/EdwinVW/pitstop/wiki/Testing%20the%20application" target="_blank">'Testing the application' section</a> in the repo's Wiki. 
 
-## Lab 2: ATDD with Specflow and Augurk
-The Pitstop solution does not contain any specifications or scenario-tests. It's up to you to add this to the solution. We will primarily focus on the *WorkshopManagement* domain because this is the domain with the most interesting business-logic.
-
-1. Add [specflow](https://specflow.org/) to the *WorkshopManagementAPI*.
-2. Write specflow feature files for the functionality in this domain.
-3. Write scenario-tests based on the feature-files that test the domain's functionality.
-4. Setup [Augurk](https://github.com/Augurk/Augurk) for the project so that you are able to see living documentation for the *WorkshopManagement* domain based on the feature files.
-
-## Lab 3: Add an event-handler for customer events
+## Lab 2: Add an event-handler for customer events
 When something happens within the Pitstop application that could be interesting for other parts of the system, an event is published to the message-broker. For instance: when a new customer is registered, a *CustomerRegistered* event is published. 
 
 In this lab you will add a service to the solution that will react to customer events. What we will do when the event is received is up to your imagination. For the workshop, we will keep it simple and just dump a message on the console. 
 
 The service we will build offers no API and can therefore be a simple console application (just as the existing *NotificationService* for instance). 
 
-### Step 3.1: Create the .NET Core application
+### Step 2.1: Create the .NET Core application
 First we will add a new service to the solution. 
 
 1. Open a command-prompt or Powershell window.
@@ -142,7 +127,7 @@ The output should look like this:
 
 ![](img/dotnet-run-customereventhandler.png)
 
-### Step 3.2: Create event-handler
+### Step 2.2: Create event-handler
 Now that you've added a new .NET Core project to the solution, you can start implementing the business logic of the service. As stated, the 'business logic' will be fairly simple for this workshop.
 
 **Open the project in VS Code**
@@ -213,7 +198,7 @@ In order to check whether or not you made any mistakes until now, build the code
 
 ![](img/vscode-build.png) 
 
-### Step 3.3: Run the service
+### Step 2.3: Run the service
 We can start the *CustomerEventHandler* to test whether or not it works. 
 
 1. Make sure you have the Pitstop application running on your machine (as described in Step 1.3: Run the application).
@@ -228,18 +213,18 @@ Watch the output window of your *CustomerEventHandler*. You should see that a me
 
 That's it! You have now created a new service that can react on events emitted by the services in the Pitstop solution. Pretty sweet!
 
-### Step 3.4: Create Docker image
+### Step 2.4: Create Docker image
 Now that you have created a functional service, let's run it in a Docker container.
 
 1. Add a new file to the project named *Dockerfile*.
 2. Copy the contents of the dockerfile of the *AuditlogService* and make sure it starts the CustomerEventHandler (in the ENTRYPOINT statement).
 
 > Please take some time to go over the Dockerfile now. You see an example of the Docker multi-stage build mechanism. 
-> - First it starts in a container that is based on an image that contains the full .NET Core SDK (*mcr.microsoft.com/dotnet/core/sdk:3.0*). We call this *build-env* for later reference.
+> - First it starts in a container that is based on an image that contains the full .NET Core SDK (*mcr.microsoft.com/dotnet/core/sdk:3.1*). We call this *build-env* for later reference.
 > - After that it sets the folder */app* as the current working-folder for the build. It copies the *.csproj* file of your project into to the working-folder. 
 > - Then it restores all the dependencies by running `dotnet restore`. 
 > - After the restore, it copies the rest of the files to the working-folder and publishes the application by running `dotnet publish -c Release -o out`. It builds the *Release* configuration and outputs the result in the folder *out* within the working-folder.
-> - Now it starts the second phase which runs in a container based on the .NET Core run-time container (*mcr.microsoft.com/dotnet/core/runtime:3.0*). This container does not contain the entire .NET Core SDK - so it's much smaller.
+> - Now it starts the second phase which runs in a container based on the .NET Core run-time container (*mcr.microsoft.com/dotnet/core/runtime:3.1*). This container does not contain the entire .NET Core SDK - so it's much smaller.
 > - It then copies the output from the other build phase (that was called *build-env*) to the local folder within the container.
 > - Finally it specifies the entry-point - the command to execute when the container starts. In this case it specifies the command `dotnet` and as argument the assembly that was created during the build. This will start the *CustomerEventHandler* console application you've created.
 
@@ -255,7 +240,7 @@ Now you are going to build a Docker image using the Dockerfile.
 
    ![](img/docker-images.png)
 
-### Step 3.5: Run the service in a Docker container
+### Step 2.5: Run the service in a Docker container
 Now that you have the Docker image, you can start a container based on this image. 
 
 1. Run a Docker container based on the image by entering the following command:
@@ -272,7 +257,7 @@ Watch the output of your running container. You should see that message again th
 
 **Before you continue, stop the running container by pressing `Ctrl-C`.**
 
-### Step 3.6: Run the service using docker-compose
+### Step 2.6: Run the service using docker-compose
 The last step in this lab is to extend the docker-compose file to include your service. 
 
 1. Open the *docker-compose* file in the *src* folder of the Pitstop repo in Visual Studio Code.
@@ -301,40 +286,61 @@ Watch the docker-compose logging in the console. You should see that message aga
 
 >The following labs are more advanced labs you can do on your own if you're done with the first two labs. There's no extensive description on how to complete these labs, only a description of the required outcome. It's up to you to figure out the best way to implement these requirements. 
 
-## Lab 3 - Add update functionality to Pitstop
-The current version of Pitstop only supports adding customers, vehicles and maintenance jobs. There is no way to update these. In this lab you have to add support for updating the data of customers, vehicles and maintenance jobs.
-
-1. Add Specflow features for this new functionality.
-2. Write the unit- and specflow-tests for testing this new functionality.
-2. Add the requested functionality.
-4. Extend the UI-tests with this new functionality.
-
-## Lab 4 - Add Inventory management
+## Lab 3 - Add Inventory management
 During a maintenance job, a mechanic often uses products like: tires, windscreen-wipers, oil, oil-filters, etcetera. There is currently no way to support this in Pitstop. In this lab you have to add the ability for a mechanic to add products that he or she uses during the execution of a maintenance-job. For every product used, the inventory must be updated and the price of the products must be added to the bill that is sent to the customer. 
 
 In the context-map shown in the <a href="https://github.com/EdwinVW/pitstop/wiki/Domain%20description" target="_blank">domain description</a> on the Wiki, Inventory Management is shown (grayed out). Use this information in this assignment. 
 
-1. Add Specflow features for this new functionality.
-2. Add an *InventoryManagement* service to the solution that can be used to manage the products in stock. 
-3. Write the unit- and specflow-tests for testing this new functionality.
-4. Add the requested functionality.
-5. Extend the UI-tests with this new functionality.
+These are the requirements for this lab:
+- The user must be able to add new products (update / delete not necessary).
+- When adding a product, the user must be able to specify an id, a name, a price and an initial stock-amount of a product.
+- When a new product is added, a *ProductRegistered* event must be emitted to the message-broker, for example:
+ ```JSON
+   {
+      "messageId": "2DEF89EF-4403-4451-8661-A869258B301B",
+      "messageType": "ProductRegistered",
+      "productId" : "C21042C8-D87A-4640-AE27-6C83F100347A",
+      "name": "All weather tire",
+      "price": 85.0,
+      "initialStock": 25
+   }
+ ```
+- The *ProductRegistered* event must be ingested by the *WorkshopManagementEventHandler*. Registered products must be stored in the WorkshopManagement reference-data database. 
+- A mechanic must be able to select a product (dropdown) and amount (text-box) for a particular *MaintenanceJob* (on the details page).
+- When the selection is saved, a *UseProduct* command must be created that must be handled by the *WorkshopManagement* domain.
+- Handling of the *UseProduct* command must produce a *ProductUsed* event that must be added to the *WorkshopManagement* event-store. This is the structure of the event:
+ ```JSON
+   {
+      "messageId": "C0EAA76D-D566-41F8-B747-3D15C1F58996",
+      "messageType": "ProductUsed",
+      "productId" : "C21042C8-D87A-4640-AE27-6C83F100347A",
+      "amount": 2
+   }
+ ```
+- Handling of the *UseProduct* command must update the stored stock-amount of the product in the *WorkshopManagement* reference data.
+- The *ProductUsed* event must be published to the message-broker.
+- The *ProductUsed* event must be handled by the *InventoryManagement* domain. This must update the stock-amount of the product.
+- The *ProductUsed* event must be handled by the *Invoicing* domain. This must add the used product to the maintenance-job.
+- The *Invoicing* domain must add the products and price to the invoice when created.
 
-## Lab 5 - Deploy Pitstop to Azure
-Until now, you've ran Pitstop in containers on your local machine. In this lab you will learn how to deploy a microservices application that consists of multiple parts (Pitstop) in Microsoft Azure. In a production scenario, using containers for running the app would be a fine solution. But in order to get you up-to-speed with different Azure services, you're not allowed to host the app in containers (using ACI or AKS).
+To fulfill these requirements, execute the following steps:
 
-- Follow the following courses in the Pluralsight library:
-	- [AZ-103 - Azure Administrator](https://app.pluralsight.com/paths/certificate/microsoft-azure-administrator-az-103)
-	- [AZ-203 - Developing Solutions for Microsoft Azure](https://app.pluralsight.com/paths/certificate/developing-solutions-for-microsoft-azure-az-203)
-- Request access to an Azure Subscription by asking approval from your business-unit manager and sending an email to [support@infosupport.com](mailto:support@infosupport.com).
-- Make a deployment diagram for deploying Pitstop as-is in Azure. A requirement is that you use Azure PAAS / SAAS services and do not use container-hosting services like ACI or AKS.
-- Send the deployment diagram to your suprevisor for review.
-- Deploy Pitstop to Azure (and make sure the web-app is publicly available).
-- Share a link  to the web-app with your supervisor. 
+### Step 3.1: Create the *InventoryManagementAPI*
 
-## Lab 6 - Setup a CI/CD pipeline
-Modern applications are built using an automated CI pipeline and deployed using an automated CD pipeline. Azure DevOps is a tool to implement fully automated CI/CD pipelines. There an on-premises version and a cloud version. In this assignment you will setup a CI/CD pipeline for building and deploying Pitstop.  
+1. Add an *InventoryManagementAPI* project to the solution that can be used to manage the products in stock.
+2. ...
 
-- Build a CI/CD pipeline in Azure DevOps to do a fully automated deployment of the necessary infrastructure (according to your diagram) for hosting Pitstop in Azure. Hint: use ARM templates. 
-- Build a CI/CD pipeline in Azure DevOps to do a fully automated deployment of the Pitstop application on the provisioned infrastructure.
+### Step 3.2: Create the *InventoryManagement* UI module
+
+1. Create a simple screen in the *WebApp* that can be used to add manage products (hint: copy paste from existing pages in CustomerManagement for example).
+2. ...
+
+### Step 3.3: Handle product-registration support to the *WorkshopManagement* domain
+
+### Step 3.4: Add product-selection to *WorkshopManagement* domain
+
+### Step 3.5: Handle product-usage in the *InventoryManagement* domain
+
+### Step 3.6: Handle product-registration and -usage in the *Invoicing* domain
+
 
