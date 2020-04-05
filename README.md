@@ -130,7 +130,7 @@ The output should look like this:
 ### Step 2.2: Create event-handler
 Now that you've added a new .NET Core project to the solution, you can start implementing the business logic of the service. As stated, the 'business logic' will be fairly simple for this workshop.
 
-**Open the project in VS Code**
+**Open the project in VS Code**  
 Let's open Visual Studio Code to start coding:
 
 1. Start Visual Studio Code.
@@ -140,7 +140,7 @@ Let's open Visual Studio Code to start coding:
 3. Open the file *CustomerEventHandler.csproj* by double-clicking on it. This is the file that describes the project. It is pretty straightforward and clean.
 4. Start the application by pressing `F5`. The project will be built and started. You can see the output in the 'DEBUG CONSOLE' window that was automatically opened.
 
-**Add reference to the infrastructure package**
+**Add reference to the infrastructure package**  
 The CustomerEventHandler service will need to receive messages from the message-broker. I have created a nuget package (*Pitstop.Infrastructure*) that contains a library that will make it easy to implement this without any specific knowledge about RabbitMQ (the broker that is used in the solution). 
 
 You need to add a reference to the *Pitstop.Infrastructure.Messaging* nuget package. Execute the following steps to add a reference to the package: 
@@ -149,7 +149,7 @@ You need to add a reference to the *Pitstop.Infrastructure.Messaging* nuget pack
 2. Type the following command in this window: `dotnet add package PitStop.Infrastructure.Messaging`. 
 3. Visual Studio Code will detect changes in the references and automatically restore the references.
 
-**Add event definition**
+**Add event definition**  
 Now you can start adding some business logic. First you need to add the definition of the events you want to handle. All messages that are sent over the message-broker are plain JSON. The *CustomerRegistered* event is defined as follows:
 
 ```json
@@ -174,7 +174,7 @@ The infrastructure package you referenced in the previous step contains an *Even
 2. Derive this class from the Event base-class in the *Pitstop.Infrastructure.Messaging* library.
 2. Add the implementation of the event-class that only contains the *customerId* and *name* property of the customer.
 
-**Add a *CustomerManager* class that handles events**
+**Add a *CustomerManager* class that handles events**  
 Now that you have a definition of the event, you will add a *CustomerManager* class that will get the events from the message-broker and handles them. The polling for messages and the handling of a message when it's available are abstracted in two separate interfaces: *IMessageHandler* and *IMessageHandlerCallback*. They are both defined in the infrastructure package.  
 
 The *IMessageHandler* interface abstracts the polling for messages on a message-broker. An implementation of this interface will be passed into your *CustomerManager*'s constructor. The infrastructure package also contains an implementation of this interface that works with RabbitMQ. 
@@ -187,13 +187,13 @@ This is a class diagram of this pattern:
 1. Add a new *CustomerManager* class to your project.
 2. Add the implementation that handles *CustomerRegistered* messages. You can reference other event-handlers (e.g. *AuditlogService*) for inspiration.
 
-**Start the customermanager**
+**Start the customermanager**  
 Now that you created a *CustomerManager* that can handle *CustomerRegistered* events, you need to start this manager form the main program. You will use the *RabbitMQMessageHandler* class from the infrastructure package to pass into the *CustomerManager*. 
 
 1. Open the *Program.cs* file in the project.
 2. Replace the existing code with the necessary code to setup and start the event-handler. You can reference other event-handlers (e.g. *AuditlogService*) for inspiration.
 
-**Build the code**
+**Build the code**  
 In order to check whether or not you made any mistakes until now, build the code. Do this by pressing `Ctrl-Shift-B` in Visual Studio Code and choosing the task *Build*. The output window should look like this:
 
 ![](img/vscode-build.png) 
@@ -289,22 +289,14 @@ Watch the docker-compose logging in the console. You should see that message aga
 ## Lab 3 - Add Inventory management
 During a maintenance job, a mechanic often uses products like: tires, windscreen-wipers, oil, oil-filters, etcetera. There is currently no way to support this in Pitstop. In this lab you have to add the ability for a mechanic to add products that he or she uses during the execution of a maintenance-job. For every product used, the inventory must be updated and the price of the products must be added to the bill that is sent to the customer. 
 
+> Caution: this is a pretty big lab and it contains less instructions than Lab 2. So take your time for this one!
+
 In the context-map shown in the <a href="https://github.com/EdwinVW/pitstop/wiki/Domain%20description" target="_blank">domain description</a> on the Wiki, Inventory Management is shown (grayed out). Use this information in this assignment. 
 
 These are the requirements for this lab:
 - The user must be able to add new products (update / delete not necessary).
-- When adding a product, the user must be able to specify an id, a name, a price and an initial stock-amount of a product.
-- When a new product is added, a *ProductRegistered* event must be emitted to the message-broker, for example:
- ```JSON
-   {
-      "messageId": "2DEF89EF-4403-4451-8661-A869258B301B",
-      "messageType": "ProductRegistered",
-      "productId" : "C21042C8-D87A-4640-AE27-6C83F100347A",
-      "name": "All weather tire",
-      "price": 85.0,
-      "initialStock": 25
-   }
- ```
+- When adding a product, the user must be able to specify an id, a name and a price of a product.
+- When a new product is added, a *ProductRegistered* event must be emitted to the message-broker.
 - The *ProductRegistered* event must be ingested by the *WorkshopManagementEventHandler*. Registered products must be stored in the WorkshopManagement reference-data database. 
 - A mechanic must be able to select a product (dropdown) and amount (text-box) for a particular *MaintenanceJob* (on the details page).
 - When the selection is saved, a *UseProduct* command must be created that must be handled by the *WorkshopManagement* domain.
@@ -313,34 +305,91 @@ These are the requirements for this lab:
    {
       "messageId": "C0EAA76D-D566-41F8-B747-3D15C1F58996",
       "messageType": "ProductUsed",
+      "maintenanceJobId": "0EC3A1DA-BDB9-4090-A76A-217D4474A4EA",
       "productId" : "C21042C8-D87A-4640-AE27-6C83F100347A",
       "amount": 2
    }
  ```
-- Handling of the *UseProduct* command must update the stored stock-amount of the product in the *WorkshopManagement* reference data.
 - The *ProductUsed* event must be published to the message-broker.
-- The *ProductUsed* event must be handled by the *InventoryManagement* domain. This must update the stock-amount of the product.
 - The *ProductUsed* event must be handled by the *Invoicing* domain. This must add the used product to the maintenance-job.
 - The *Invoicing* domain must add the products and price to the invoice when created.
+
+> We will ignore updating the stock-amount of a product in this lab. For simplicity, we just assume there's an unlimited supply of products available in the inventory. Maybe you can implement a stock-amount in the *Inventory* domain (and updating this using *ProductUsed* events) as a bonus exercise. 
+
 
 To fulfill these requirements, execute the following steps:
 
 ### Step 3.1: Create the *InventoryManagementAPI*
 
-1. Add an *InventoryManagementAPI* project to the solution that can be used to manage the products in stock.
-2. ...
+> For this step you can look at the existing *CustomerManagementAPI* for inspiration.
+
+1. Add an *InventoryManagementAPI* project (ASP.NET WebAPI) to the solution that can be used to manage products.
+2. Implement a POST operation on the API controller for registering a new product.
+3. Implement data-access so the service can store products in a separate SQL Server database named *InventoryManagement*.
+4. Expand the API controller so it uses a *RabbitMQMessagePublisher* (injected using standard DI) for publishing a *ProductRegistered* event. This is an example of the event:
+   ```JSON
+   {
+      "messageId": "2DEF89EF-4403-4451-8661-A869258B301B",
+      "messageType": "ProductRegistered",
+      "productId" : "C21042C8-D87A-4640-AE27-6C83F100347A",
+      "name": "All weather tire",
+      "price": 85.0
+   }
+   ```
+5. Test the functionality of registering a new product. Call the API directly and check whether the product is stored in the database and a *ProductRegistered* command is published to the message-broker.
 
 ### Step 3.2: Create the *InventoryManagement* UI module
 
-1. Create a simple screen in the *WebApp* that can be used to add manage products (hint: copy paste from existing pages in CustomerManagement for example).
-2. ...
+> For this step you can look at the existing *CustomerManagement* module in the *WebApp*.
+
+1. Add a simple screen in the *WebApp* that can be used to add manage products (hint: copy paste from existing pages in CustomerManagement module for example).
+2. Create an HTTP client for calling the *InventoryManagementAPI*, inject it into to controller (using standard DI) and call it to register a product.
+3. Test the functionality of registering a new product. Call the API directly and check whether the product is stored in the database and a *ProductRegistered* event is published to the message-broker.
 
 ### Step 3.3: Handle product-registration support to the *WorkshopManagement* domain
 
+1. Expand the *WorkshopManagementEventHandler* so it ingests *ProductRegistered* events.
+2. Add an event-handler that will store the registered product's information in the reference-data database (see the *CustomerRegistered* handler for inspiration).
+
 ### Step 3.4: Add product-selection to *WorkshopManagement* domain
 
-### Step 3.5: Handle product-usage in the *InventoryManagement* domain
+1. Expand the *RefDataController* in the *WorkshopManagementAPI* so it can deliver a list of available products.
+2. Expand the *MaintenanceJobDetails* page in the *WorkshopManagement* module in the *WebApp*:
+   - Allow the user to select a product and an amount.
+   - Allow the user to save the changes (or cancel without saving the changes).
+   - Send a *UseProduct* command to the *WorkshopManagementAPI*. This is an example of the command:
+   ```JSON
+   {
+      "messageId": "14F2E22C-FFC8-4079-A711-2DA52B755800",
+      "messageType": "UseProduct",
+      "maintenanceJobId": "0EC3A1DA-BDB9-4090-A76A-217D4474A4EA",
+      "productId" : "C21042C8-D87A-4640-AE27-6C83F100347A",
+      "amount": 2
+   }
+   ```
+3. Add a *UseProductCommandHandler* to the *WorkshopManagementAPI* that will handle the *UseProductCommand* (look at the existing command-handlers for inspiration).
+   - Make sure the new command-handler is registered in the *CommandHandlersDIRegistration* class!
+4. Expand the *WorkshopPlanning* and *MaintenanceJob* entities in the *WorkshopManagement* domain so they can handle the *UseProduct* command. This command should result in a *ProductUsed* event (that will be automatically stored in the event-store). This is an example of the event:
+   ```JSON
+   {
+      "messageId": "C0CB1C09-2E5C-4E13-A600-DB8CFA53B5CD",
+      "messageType": "ProductUsed",
+      "maintenanceJobId": "0EC3A1DA-BDB9-4090-A76A-217D4474A4EA",
+      "productId" : "C21042C8-D87A-4640-AE27-6C83F100347A",
+      "amount": 2
+   }
+   ```
+5. Expand the *WorkshopManagementAPI* so that products used for a *MaintenanceJob* are returned when retrieving the details of this *MaintenanceJob*.
+6. Expand the *MaintenanceJobDetails* page in the *WorkshopManagement* module in the *WebApp* so that the products that were used for a *MaintenanceJob* are shown.
+7. Expand the *UseProductCommandHandler* so it uses the message-publisher (injected using standard DI) to publish a *ProductUsed* event to the message-broker.
+8. Test the functionality to see whether or not it works correctly.
 
-### Step 3.6: Handle product-registration and -usage in the *Invoicing* domain
+### Step 3.5: Handle product-registration and -usage in the *Invoicing* domain
 
-
+1. Expand the *InvoiceService* so it ingests *ProductRegistered* and *ProductUsed* events.
+2. Add a *ProductRegistered* event-handler that will store the registered product's information in the database.
+3. Add a *ProductUsed* event-handler that will store the used product's information with the *MaintenanceJob* specified in the event in the database.
+4. Expand the generation of the invoice so that:
+   - The price of the used products is added to the total price.
+   - The used products (and amount used) and the total price is shown on the generated invoice.
+5. Test the functionality to see whether or not it works correctly.
