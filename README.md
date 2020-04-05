@@ -149,7 +149,7 @@ You need to add a reference to the *Pitstop.Infrastructure.Messaging* nuget pack
 **2.2.3: Add event definition**  
 Now you can start adding some business logic. First you need to add the definition of the events you want to handle. All messages that are sent over the message-broker are plain JSON. The *CustomerRegistered* event is defined as follows:
 
-```json
+```JSON
 {
 	"messageId": "guid",
 	"messageType": "string",
