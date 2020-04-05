@@ -3,6 +3,7 @@
 skinparam monochrome true
 hide footbox
 
+actor User
 participant WebApp
 participant InventoryAPI
 database Inventory
@@ -14,24 +15,34 @@ participant MessageBroker
 participant InvoiceService
 database Invoicing
 
+User -> WebApp: Register new product
 WebApp -> InventoryAPI: RegisterProduct
 InventoryAPI -> Inventory: Store product info
 InventoryAPI -> MessageBroker: ProductRegistered event
 WebApp <-- InventoryAPI
+User <-- WebApp
 MessageBroker -> WorkshopManagementEventHandler: Productregistered event
 WorkshopManagementEventHandler -> WorkshopManagement: Store product info
 MessageBroker -> InvoiceService: Productregistered event
 InvoiceService -> Invoicing: Store product info
 
+User -> WebApp: Get MaintenanceJob details
 WebApp -> WorkshopManagementAPI: Get MaintenanceJob details
+WorkshopManagementAPI -> WorkshopManagementEventStore: Get by id
+WorkshopManagementAPI <-- WorkshopManagementEventStore
 WebApp <-- WorkshopManagementAPI
 WebApp -> WorkshopManagementAPI: Get Productlist
+WorkshopManagementAPI -> WorkshopManagement: Get list
+WorkshopManagementAPI <-- WorkshopManagement
+User <-- WebApp
+User -> WebApp: Add product
 WebApp <-- WorkshopManagementAPI
 WebApp -> WorkshopManagementAPI: UseProduct command
 WorkshopManagementAPI -> WorkshopManagementAPI: ProductUsed event
 WorkshopManagementAPI -> WorkshopManagementEventStore: Store ProductUsed event
 WorkshopManagementAPI -> MessageBroker: ProductUsed event
 WebApp <-- WorkshopManagementAPI
+User <-- WebApp
 
 MessageBroker -> InvoiceService: ProductUsed event
 InvoiceService -> Invoicing: Add used product\nto MaintenanceJob
