@@ -1,0 +1,39 @@
+@startuml
+
+skinparam monochrome true
+hide footbox
+
+participant WebApp
+participant InventoryAPI
+database Inventory
+participant WorkshopManagementAPI
+participant WorkshopManagementEventHandler
+database WorkshopManagementEventStore 
+database WorkshopManagement
+participant MessageBroker
+participant InvoiceService
+database Invoicing
+
+WebApp -> InventoryAPI: RegisterProduct
+InventoryAPI -> Inventory: Store product info
+InventoryAPI -> MessageBroker: ProductRegistered event
+WebApp <-- InventoryAPI
+MessageBroker -> WorkshopManagementEventHandler: Productregistered event
+WorkshopManagementEventHandler -> WorkshopManagement: Store product info
+MessageBroker -> InvoiceService: Productregistered event
+InvoiceService -> Invoicing: Store product info
+
+WebApp -> WorkshopManagementAPI: Get MaintenanceJob details
+WebApp <-- WorkshopManagementAPI
+WebApp -> WorkshopManagementAPI: Get Productlist
+WebApp <-- WorkshopManagementAPI
+WebApp -> WorkshopManagementAPI: UseProduct command
+WorkshopManagementAPI -> WorkshopManagementAPI: ProductUsed event
+WorkshopManagementAPI -> WorkshopManagementEventStore: Store ProductUsed event
+WorkshopManagementAPI -> MessageBroker: ProductUsed event
+WebApp <-- WorkshopManagementAPI
+
+MessageBroker -> InvoiceService: ProductUsed event
+InvoiceService -> Invoicing: Add used product\nto MaintenanceJob
+
+@enduml

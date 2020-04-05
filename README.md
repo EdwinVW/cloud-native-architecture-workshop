@@ -313,6 +313,9 @@ These are the requirements for this lab:
 
 > We will ignore updating the stock-amount of a product in this lab. For simplicity, we just assume there's an unlimited supply of products available in the inventory. Maybe you can implement a stock-amount in the *Inventory* domain (and updating this using *ProductUsed* events) as a bonus exercise. 
 
+This is a sequence diagram explaining the interaction between the different components involved:
+
+![](img/inventory-management.png)
 
 To fulfill these requirements, execute the following steps:
 
@@ -364,7 +367,7 @@ To fulfill these requirements, execute the following steps:
       "amount": 2
    }
    ```
-3. Add a *UseProductCommandHandler* to the *WorkshopManagementAPI* that will handle the *UseProductCommand* (look at the existing command-handlers for inspiration).
+3. Add a controller method and a *UseProductCommandHandler* to the *WorkshopManagementAPI* that will handle the *UseProductCommand* (look at the existing controller methods and command-handlers for inspiration).
    - Make sure the new command-handler is registered in the *CommandHandlersDIRegistration* class!
 4. Expand the *WorkshopPlanning* and *MaintenanceJob* entities in the *WorkshopManagement* domain so they can handle the *UseProduct* command. This command should result in a *ProductUsed* event (that will be automatically stored in the event-store). This is an example of the event:
    ```JSON
@@ -373,6 +376,7 @@ To fulfill these requirements, execute the following steps:
       "messageType": "ProductUsed",
       "maintenanceJobId": "0EC3A1DA-BDB9-4090-A76A-217D4474A4EA",
       "productId" : "C21042C8-D87A-4640-AE27-6C83F100347A",
+      "price": 85.0,
       "amount": 2
    }
    ```
@@ -384,9 +388,10 @@ To fulfill these requirements, execute the following steps:
 ### Step 3.5: Handle product-registration and -usage in the *Invoicing* domain
 
 1. Expand the *InvoiceService* so it ingests *ProductRegistered* and *ProductUsed* events.
-2. Add a *ProductRegistered* event-handler that will store the registered product's information in the database.
-3. Add a *ProductUsed* event-handler that will store the used product's information with the *MaintenanceJob* specified in the event in the database.
+2. Add a *ProductRegistered* event-handler that will store the registered product's information (only productId and name) in the database.
+3. Add a *ProductUsed* event-handler that will store the used product's information (productId, amount and price) with the *MaintenanceJob* specified in the event in the database.
 4. Expand the generation of the invoice so that:
+   - The name, amount and total price of the used products are shown on the generated invoice (1 line per used product).
    - The price of the used products is added to the total price.
-   - The used products (and amount used) and the total price is shown on the generated invoice.
 5. Test the functionality to see whether or not it works correctly.
+
