@@ -34,9 +34,9 @@ WebApp <-- WorkshopManagementAPI
 WebApp -> WorkshopManagementAPI: Get Productlist
 WorkshopManagementAPI -> WorkshopManagement: Get list
 WorkshopManagementAPI <-- WorkshopManagement
+WebApp <-- WorkshopManagementAPI
 User <-- WebApp
 User -> WebApp: Add product
-WebApp <-- WorkshopManagementAPI
 WebApp -> WorkshopManagementAPI: UseProduct command
 WorkshopManagementAPI -> WorkshopManagementAPI: ProductUsed event
 WorkshopManagementAPI -> WorkshopManagementEventStore: Store ProductUsed event
