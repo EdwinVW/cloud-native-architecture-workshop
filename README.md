@@ -48,21 +48,18 @@ During the installation of Docker CE, do not switch to Windows containers. We wi
 After the installation, start the Docker engine by double clicking the Docker for Windows icon. 
 
 #### Visual Studio Code
-This workshop assumes you are working with Visual Studio Code. 
-
+This workshop assumes you are working with Visual Studio Code.  
 Download link: <a href="https://visualstudio.microsoft.com/downloads" target="_blank">Visual Studio Code</a>
 
 #### .NET Core SDK
-Install the .NET Core SDK version 3.1. 
-
+Install the .NET Core SDK version 3.1.  
 Download link: <a href="https://www.microsoft.com/net/download" target="_blank">.NET Core SDK</a>
 
 #### Git client
-Install the Git client for your OS to interact with the Pitstop repo on Github. 
-
+Install the Git client for your OS to interact with the Pitstop repo on Github.  
 Download link: <a href="https://git-scm.com/downloads" target="_blank">Git</a> 
 
-### Step 0.2: Access Github
+### Step 0.2: Get access to Github
 If you do not already have a Github account, create one by going to the <a href="https://www.github.com" target="_blank">Github website</a> and click on the *Sign up* link in the top right corner. Make sure you are logged into Github with your account. 
 
 ## Lab 1: Run the applicaton
