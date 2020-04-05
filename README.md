@@ -127,7 +127,7 @@ The output should look like this:
 ### Step 2.2: Create event-handler
 Now that you've added a new .NET Core project to the solution, you can start implementing the business logic of the service. As stated, the 'business logic' will be fairly simple for this workshop.
 
-**Open the project in VS Code**  
+**2.2.1 Open the project in VS Code**  
 Let's open Visual Studio Code to start coding:
 
 1. Start Visual Studio Code.
@@ -137,7 +137,7 @@ Let's open Visual Studio Code to start coding:
 3. Open the file *CustomerEventHandler.csproj* by double-clicking on it. This is the file that describes the project. It is pretty straightforward and clean.
 4. Start the application by pressing `F5`. The project will be built and started. You can see the output in the 'DEBUG CONSOLE' window that was automatically opened.
 
-**Add reference to the infrastructure package**  
+**2.2.2 Add reference to the infrastructure package**  
 The CustomerEventHandler service will need to receive messages from the message-broker. I have created a nuget package (*Pitstop.Infrastructure*) that contains a library that will make it easy to implement this without any specific knowledge about RabbitMQ (the broker that is used in the solution). 
 
 You need to add a reference to the *Pitstop.Infrastructure.Messaging* nuget package. Execute the following steps to add a reference to the package: 
@@ -146,7 +146,7 @@ You need to add a reference to the *Pitstop.Infrastructure.Messaging* nuget pack
 2. Type the following command in this window: `dotnet add package PitStop.Infrastructure.Messaging`. 
 3. Visual Studio Code will detect changes in the references and automatically restore the references.
 
-**Add event definition**  
+**2.2.3 Add event definition**  
 Now you can start adding some business logic. First you need to add the definition of the events you want to handle. All messages that are sent over the message-broker are plain JSON. The *CustomerRegistered* event is defined as follows:
 
 ```json
@@ -171,7 +171,7 @@ The infrastructure package you referenced in the previous step contains an *Even
 2. Derive this class from the Event base-class in the *Pitstop.Infrastructure.Messaging* library.
 2. Add the implementation of the event-class that only contains the *customerId* and *name* property of the customer.
 
-**Add a *CustomerManager* class that handles events**  
+**2.2.4 Add a *CustomerManager* class that handles events**  
 Now that you have a definition of the event, you will add a *CustomerManager* class that will get the events from the message-broker and handles them. The polling for messages and the handling of a message when it's available are abstracted in two separate interfaces: *IMessageHandler* and *IMessageHandlerCallback*. They are both defined in the infrastructure package.  
 
 The *IMessageHandler* interface abstracts the polling for messages on a message-broker. An implementation of this interface will be passed into your *CustomerManager*'s constructor. The infrastructure package also contains an implementation of this interface that works with RabbitMQ. 
@@ -184,13 +184,13 @@ This is a class diagram of this pattern:
 1. Add a new *CustomerManager* class to your project.
 2. Add the implementation that handles *CustomerRegistered* messages. You can reference other event-handlers (e.g. *AuditlogService*) for inspiration.
 
-**Start the customermanager**  
+**2.2.5 Start the customermanager**  
 Now that you created a *CustomerManager* that can handle *CustomerRegistered* events, you need to start this manager form the main program. You will use the *RabbitMQMessageHandler* class from the infrastructure package to pass into the *CustomerManager*. 
 
 1. Open the *Program.cs* file in the project.
 2. Replace the existing code with the necessary code to setup and start the event-handler. You can reference other event-handlers (e.g. *AuditlogService*) for inspiration.
 
-**Build the code**  
+**2.2.6 Build the code**  
 In order to check whether or not you made any mistakes until now, build the code. Do this by pressing `Ctrl-Shift-B` in Visual Studio Code and choosing the task *Build*. The output window should look like this:
 
 ![](img/vscode-build.png) 
@@ -286,7 +286,7 @@ Watch the docker-compose logging in the console. You should see that message aga
 ## Lab 3 - Add Inventory management
 During a maintenance job, a mechanic often uses products like: tires, windscreen-wipers, oil, oil-filters, etcetera. There is currently no way to support this in Pitstop. In this lab you have to add the ability for a mechanic to add products that he or she uses during the execution of a maintenance-job. For every product used, the inventory must be updated and the price of the products must be added to the bill that is sent to the customer. 
 
-> Caution: this is a pretty big lab and it contains less instructions than Lab 2. So take your time for this one!
+> Caution: this is a pretty big lab and it contains less detailed instructions than Lab 2. So take your time for this one!
 
 In the context-map shown in the <a href="https://github.com/EdwinVW/pitstop/wiki/Domain%20description" target="_blank">domain description</a> on the Wiki, Inventory Management is shown (grayed out). Use this information in this assignment. 
 
