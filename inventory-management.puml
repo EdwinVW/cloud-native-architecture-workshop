@@ -6,7 +6,7 @@ hide footbox
 actor User
 participant WebApp
 participant InventoryAPI
-database Inventory
+database InventoryManagement
 participant WorkshopManagementAPI
 participant WorkshopManagementEventHandler
 database WorkshopManagementEventStore 
@@ -17,7 +17,7 @@ database Invoicing
 
 User -> WebApp: Register new product
 WebApp -> InventoryAPI: RegisterProduct
-InventoryAPI -> Inventory: Store product info
+InventoryAPI -> InventoryManagement: Store product info
 InventoryAPI -> MessageBroker: ProductRegistered event
 WebApp <-- InventoryAPI
 User <-- WebApp
