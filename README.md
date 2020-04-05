@@ -364,6 +364,7 @@ To fulfill these requirements, execute the following steps:
       "messageType": "UseProduct",
       "maintenanceJobId": "0EC3A1DA-BDB9-4090-A76A-217D4474A4EA",
       "productId" : "C21042C8-D87A-4640-AE27-6C83F100347A",
+      "price": 85.0,      
       "amount": 2
    }
    ```
@@ -393,5 +394,12 @@ To fulfill these requirements, execute the following steps:
 4. Expand the generation of the invoice so that:
    - The name, amount and total price of the used products are shown on the generated invoice (1 line per used product).
    - The price of the used products is added to the total price.
-5. Test the functionality to see whether or not it works correctly.
+5. Because you created the event handlers for *ProductRegistered* and *ProductUsed* in the *InvoiceService* last, you will probably have a mismatch between the list of products in the *InventoryManagement* database and the *Invoicing* database. Find a solution to fix this mismatch. There are two appproaches:
+   - Empty all the databases and start over with registering new products (fine (and quickest) for the workshop, but never a good solution in production!). 
+   - Replay all the *ProductRegistered* and *ProductUsed* events that were sent before by publishing them to the *Invoicng* queue using the RabbitMQ management console (see the <a href="https://github.com/edwinvw/pitstop/wiki/Testing%20the%20application#testing-notifications" target="_blank">'Testing the notifications' section</a> in the repo's Wiki for instructions on how to do this. In this description, a message is published to the *Pitstop* exchange. For this scenario, publish the messages only directly to the *Invoicing* queue. Ask yourself why?
+6. Test the functionality to see whether or not it works correctly.
+
+### Step 3.6: Run InventoryManagementAPI in docker container
+
+As a bonus step, I will leave it entirely up to you to run the *InventoryManagementAPI* in a docker container as part of a docker-compose setup (see [Lab 2, step 2.4 - 2.6](#step-24-create-docker-image) for instructions). Use `pitstop/inventorymanagementapi:1.0` as tag for the container image.
 
