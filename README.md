@@ -21,7 +21,7 @@ In order to complete the labs, make sure you read (at least) the following secti
 - [Solution architecture](https://github.com/EdwinVW/pitstop/wiki/Solution%20Architecture)
 - [Technology used](https://github.com/EdwinVW/pitstop/wiki/Technology%20used)
 
-By now, you should have some understanding of what the Pitstop solution contains and what functionality it offers. Next you will execute several lab assignments in which you will add stuff to the Pitstop solution.
+By now, you should have an understanding of what the Pitstop solution contains and what functionality it offers. Next you will execute several lab assignments in which you will add stuff to the Pitstop solution.
 
 ## Lab 0: Preparation
 There are some prerequisites for this workshop. First you need an active Internet connection. Additionally you will need to install the following software on your laptop:
