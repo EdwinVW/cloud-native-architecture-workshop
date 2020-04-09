@@ -91,7 +91,7 @@ This would be a good time to walk through the solution and see what's in there. 
 In order to build the Docker images, follow the instructions in the <a href="https://github.com/EdwinVW/pitstop/wiki/Building%20the%20Docker%20images" target="_blank">'Building the Docker images' section</a> in the repo's Wiki.
 
 ### Step 1.3: Run the application
-In order to run the application, follow the instructions in the <a href="https://github.com/EdwinVW/pitstop/wiki/Run%20the%20application%20using%20using%20Docker%20Compose" target="_blank">'Starting the application' section</a> in the repo's Wiki.
+In order to run the application, follow the instructions in the <a href="https://github.com/EdwinVW/pitstop/wiki/Run%20the%20application%20using%20Docker%20Compose" target="_blank">'Starting the application' section</a> in the repo's Wiki.
 
 ### Step 1.4: Get to know the solution
 In order to get to know the functionality of the application, make sure you have read the introduction of the solution in the repo's README file up to the *Technology* section. After that, follow the <a href="https://github.com/EdwinVW/pitstop/wiki/Testing%20the%20application" target="_blank">'Testing the application' section</a> in the repo's Wiki. 
