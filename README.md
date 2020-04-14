@@ -21,7 +21,7 @@ In order to complete the labs, make sure you read (at least) the following secti
 - [Solution architecture](https://github.com/EdwinVW/pitstop/wiki/Solution%20Architecture)
 - [Technology used](https://github.com/EdwinVW/pitstop/wiki/Technology%20used)
 
-By now, you should have some understanding of what the Pitstop solution contains and what functionality it offers. Next you will execute several lab assignments in which you will add stuff to the Pitstop solution.
+By now, you should have an understanding of what the Pitstop solution contains and what functionality it offers. Next you will execute several lab assignments in which you will add stuff to the Pitstop solution.
 
 ## Lab 0: Preparation
 There are some prerequisites for this workshop. First you need an active Internet connection. Additionally you will need to install the following software on your laptop:
@@ -30,6 +30,7 @@ There are some prerequisites for this workshop. First you need an active Interne
 - Visual Studio Code
 - .NET Core SDK
 - (optional) Git client
+- (optional) Azure Data Studio
 
 >If you already have satisfied these prerequisites, you can skip Lab 0 and go directly to Lab 1. 
 
@@ -90,7 +91,7 @@ This would be a good time to walk through the solution and see what's in there. 
 In order to build the Docker images, follow the instructions in the <a href="https://github.com/EdwinVW/pitstop/wiki/Building%20the%20Docker%20images" target="_blank">'Building the Docker images' section</a> in the repo's Wiki.
 
 ### Step 1.3: Run the application
-In order to run the application, follow the instructions in the <a href="https://github.com/EdwinVW/pitstop/wiki/Run%20the%20application%20using%20using%20Docker%20Compose" target="_blank">'Starting the application' section</a> in the repo's Wiki.
+In order to run the application, follow the instructions in the <a href="https://github.com/EdwinVW/pitstop/wiki/Run%20the%20application%20using%20Docker%20Compose" target="_blank">'Starting the application' section</a> in the repo's Wiki.
 
 ### Step 1.4: Get to know the solution
 In order to get to know the functionality of the application, make sure you have read the introduction of the solution in the repo's README file up to the *Technology* section. After that, follow the <a href="https://github.com/EdwinVW/pitstop/wiki/Testing%20the%20application" target="_blank">'Testing the application' section</a> in the repo's Wiki. 
@@ -180,7 +181,7 @@ Now that you have a definition of the event, you will add a *CustomerManager* cl
 
 The *IMessageHandler* interface abstracts the polling for messages on a message-broker. An implementation of this interface will be passed into your *CustomerManager*'s constructor. The infrastructure package also contains an implementation of this interface that works with RabbitMQ. 
 
-When you want to start listening for messages, you have to call the *Start()* method on this interface and pass in an implementation of the *IMessageHhandlerCallback* interface. The *HandleMessageAync()* method is called on the callback implementation when a message is available on the message-broker. The *CustomerManager* will implement this interface and handle the events.
+When you want to start listening for messages, you have to call the *Start()* method on this interface and pass in an implementation of the *IMessageHandlerCallback* interface. The *HandleMessageAsync()* method is called on the callback implementation when a message is available on the message-broker. The *CustomerManager* will implement this interface and handle the events.
 
 This is a class diagram of this pattern:
 ![](img/messaging-cd.png)
@@ -261,7 +262,7 @@ Watch the output of your running container. You should see that message again th
 ### Step 2.6: Run the service using docker-compose
 The last step in this lab is to extend the docker-compose file to include your service. 
 
-1. Open the *docker-compose* file in the *src* folder of the Pitstop repo in Visual Studio Code.
+1. Open the *docker-compose.yml* file in the *src* folder of the Pitstop repo in Visual Studio Code.
 2. Add this snippet to the *docker-compose* file just before the webapp part:
  
    ```
@@ -296,9 +297,10 @@ In the context-map shown in the <a href="https://github.com/EdwinVW/pitstop/wiki
 
 These are the requirements for this lab:
 - The user must be able to add new products (update / delete not necessary).
-- When adding a product, the user must be able to specify an id, a name and a price of a product.
+- When adding a product, the user must be able to specify a name and a price of a product. A product id should be generated automatically.
 - When a new product is added, a *ProductRegistered* event must be emitted to the message-broker.
 - The *ProductRegistered* event must be ingested by the *WorkshopManagementEventHandler*. Registered products must be stored in the WorkshopManagement reference-data database. 
+- The *ProductRegistered* event must be ingested by the *InvoiceService*. Registered products (productId and name) must be stored in the Invoicing data database.
 - A mechanic must be able to select a product (dropdown) and amount (text-box) for a particular *MaintenanceJob* (on the details page).
 - When the selection is saved, a *UseProduct* command must be created that must be handled by the *WorkshopManagement* domain.
 - Handling of the *UseProduct* command must produce a *ProductUsed* event that must be added to the *WorkshopManagement* event-store. This is the structure of the event:
@@ -346,9 +348,9 @@ To fulfill these requirements, execute the following steps:
 
 > For this step you can look at the existing *CustomerManagement* module in the *WebApp*.
 
-1. Add a simple screen in the *WebApp* that can be used to add manage products (hint: copy paste from existing pages in CustomerManagement module for example).
+1. Add a simple screen in the *WebApp* that can be used to add products (hint: copy paste from existing pages in CustomerManagement module for example).
 2. Create an HTTP client for calling the *InventoryManagementAPI*, inject it into to controller (using standard DI) and call it to register a product.
-3. Test the functionality of registering a new product. Call the API directly and check whether the product is stored in the database and a *ProductRegistered* event is published to the message-broker.
+3. Test the functionality of registering a new product using the new page. Check whether the product is stored in the database and a *ProductRegistered* event is published to the message-broker.
 
 ### Step 3.3: Handle product-registration support to the *WorkshopManagement* domain
 
