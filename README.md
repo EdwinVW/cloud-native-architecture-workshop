@@ -30,7 +30,7 @@ There are some prerequisites for this workshop. First you need an active Interne
 - Visual Studio Code
 - .NET Core SDK
 - (optional) Git client
-- (ptional) Azure Data Studio
+- (optional) Azure Data Studio
 
 >If you already have satisfied these prerequisites, you can skip Lab 0 and go directly to Lab 1. 
 
