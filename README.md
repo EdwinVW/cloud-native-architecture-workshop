@@ -297,7 +297,7 @@ In the context-map shown in the <a href="https://github.com/EdwinVW/pitstop/wiki
 
 These are the requirements for this lab:
 - The user must be able to add new products (update / delete not necessary).
-- When adding a product, the user must be able to specify an id, a name and a price of a product.
+- When adding a product, the user must be able to specify a name and a price of a product. A product id should be generated automatically.
 - When a new product is added, a *ProductRegistered* event must be emitted to the message-broker.
 - The *ProductRegistered* event must be ingested by the *WorkshopManagementEventHandler*. Registered products must be stored in the WorkshopManagement reference-data database. 
 - A mechanic must be able to select a product (dropdown) and amount (text-box) for a particular *MaintenanceJob* (on the details page).
