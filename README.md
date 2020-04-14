@@ -300,7 +300,7 @@ These are the requirements for this lab:
 - When adding a product, the user must be able to specify a name and a price of a product. A product id should be generated automatically.
 - When a new product is added, a *ProductRegistered* event must be emitted to the message-broker.
 - The *ProductRegistered* event must be ingested by the *WorkshopManagementEventHandler*. Registered products must be stored in the WorkshopManagement reference-data database. 
-- According to the sequence diagram. ProductRegistered is also ingested by the Inventory Service.
+- The *ProductRegistered* event must be ingested by the *InvoiceService*. Registered products (productId and name) must be stored in the Invoicing data database.
 - A mechanic must be able to select a product (dropdown) and amount (text-box) for a particular *MaintenanceJob* (on the details page).
 - When the selection is saved, a *UseProduct* command must be created that must be handled by the *WorkshopManagement* domain.
 - Handling of the *UseProduct* command must produce a *ProductUsed* event that must be added to the *WorkshopManagement* event-store. This is the structure of the event:
