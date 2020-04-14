@@ -262,7 +262,7 @@ Watch the output of your running container. You should see that message again th
 ### Step 2.6: Run the service using docker-compose
 The last step in this lab is to extend the docker-compose file to include your service. 
 
-1. Open the *docker-compose* file in the *src* folder of the Pitstop repo in Visual Studio Code.
+1. Open the *docker-compose.yml* file in the *src* folder of the Pitstop repo in Visual Studio Code.
 2. Add this snippet to the *docker-compose* file just before the webapp part:
  
    ```
