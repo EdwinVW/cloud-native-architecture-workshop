@@ -181,7 +181,7 @@ Now that you have a definition of the event, you will add a *CustomerManager* cl
 
 The *IMessageHandler* interface abstracts the polling for messages on a message-broker. An implementation of this interface will be passed into your *CustomerManager*'s constructor. The infrastructure package also contains an implementation of this interface that works with RabbitMQ. 
 
-When you want to start listening for messages, you have to call the *Start()* method on this interface and pass in an implementation of the *IMessageHandlerCallback* interface. The *HandleMessageAync()* method is called on the callback implementation when a message is available on the message-broker. The *CustomerManager* will implement this interface and handle the events.
+When you want to start listening for messages, you have to call the *Start()* method on this interface and pass in an implementation of the *IMessageHandlerCallback* interface. The *HandleMessageAsync()* method is called on the callback implementation when a message is available on the message-broker. The *CustomerManager* will implement this interface and handle the events.
 
 This is a class diagram of this pattern:
 ![](img/messaging-cd.png)
