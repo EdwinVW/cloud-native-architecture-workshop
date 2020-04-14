@@ -350,7 +350,7 @@ To fulfill these requirements, execute the following steps:
 
 1. Add a simple screen in the *WebApp* that can be used to add products (hint: copy paste from existing pages in CustomerManagement module for example).
 2. Create an HTTP client for calling the *InventoryManagementAPI*, inject it into to controller (using standard DI) and call it to register a product.
-3. Test the functionality of registering a new product. Call the API directly and check whether the product is stored in the database and a *ProductRegistered* event is published to the message-broker.
+3. Test the functionality of registering a new product using the new page. Check whether the product is stored in the database and a *ProductRegistered* event is published to the message-broker.
 
 ### Step 3.3: Handle product-registration support to the *WorkshopManagement* domain
 
