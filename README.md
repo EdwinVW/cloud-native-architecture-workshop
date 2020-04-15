@@ -67,6 +67,15 @@ Download link: <a href="https://docs.microsoft.com/en-us/sql/azure-data-studio/d
 ### Step 0.2: Get access to Github
 If you do not already have a Github account, create one by going to the <a href="https://www.github.com" target="_blank">Github website</a> and click on the *Sign up* link in the top right corner. Make sure you are logged into Github with your account. 
 
+### Step 0.3: Make sure you can run PowerShell scripts
+When you're running on a Windows machine, you need to allow execution of the Pitstop PowerShell scripts. Execute the following steps to enable this:
+
+1. Open a PowerShell prompt as Administrator.
+2. Execute the following command:  
+   ```
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+   ```  
+
 ## Lab 1: Run the applicaton
 In this lab we'll make sure you can run Pitstop on your machine. 
 
