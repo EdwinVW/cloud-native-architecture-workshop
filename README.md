@@ -196,7 +196,7 @@ This is a class diagram of this pattern:
 ![](img/messaging-cd.png)
  
 1. Add a new *CustomerManager* class to your project.
-2. Add the implementation that handles *CustomerRegistered* messages. You can reference other event-handlers (e.g. *AuditlogService*) for inspiration.
+2. Add the implementation that handles *CustomerRegistered* messages. For this workshop it doesn't have to be an elaborate handler. Just dump the received message on the console for example. You can reference other event-handlers (e.g. *AuditlogService*) for inspiration.
 
 **2.2.5: Start the customermanager**  
 Now that you created a *CustomerManager* that can handle *CustomerRegistered* events, you need to start this manager form the main program. You will use the *RabbitMQMessageHandler* class from the infrastructure package to pass into the *CustomerManager*. 
