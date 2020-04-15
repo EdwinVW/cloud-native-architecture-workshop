@@ -195,7 +195,30 @@ Now that you created a *CustomerManager* that can handle *CustomerRegistered* ev
 1. Open the *Program.cs* file in the project.
 2. Replace the existing code with the necessary code to setup and start the event-handler. You can reference other event-handlers (e.g. *AuditlogService*) for inspiration.
 
-**2.2.6: Build the code**  
+**2.2.6: Add supporting files**  
+You need some supporting files (things like settings etc.) in order to run the service.
+
+1. Copy the `appsettings.*.json` files from the *AuditlogService* to your project folder. Remove the *Auditlog* section from the settings files.
+2. Copy the `Properties/launchsettings.json` file from the *AuditlogService* to a `Properties` folder in your project folder.
+3. Add the following snippet to your `.csproj` file:
+   ```xml
+      <ItemGroup>
+      <Content Include="appsettings.Development.json">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="appsettings.json">
+         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="appsettings.Production.json">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+   </ItemGroup>
+   ```
+4. Make sure you have referenced the necessary NuGet packages in your `.csproj` file (see the `.csproj` file of the *AuditlogService* for reference).
+
+**2.2.7: Build the code**  
 In order to check whether or not you made any mistakes until now, build the code. Do this by pressing `Ctrl-Shift-B` in Visual Studio Code and choosing the task *Build*. The output window should look like this:
 
 ![](img/vscode-build.png) 
