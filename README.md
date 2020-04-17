@@ -226,6 +226,7 @@ You need some supporting files (things like settings etc.) in order to run the s
    </ItemGroup>
    ```
 4. Make sure you have referenced the necessary NuGet packages in your `.csproj` file (see the `.csproj` file of the *AuditlogService* for reference).
+5. Copy the `.dockerignore` file from the AuditlogService to your project folder.  
 
 **2.2.7: Build the code**  
 In order to check whether or not you made any mistakes until now, build the code. Do this by pressing `Ctrl-Shift-B` in Visual Studio Code and choosing the task *Build*. The output window should look like this:
