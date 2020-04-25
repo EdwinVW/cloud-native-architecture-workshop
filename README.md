@@ -207,7 +207,9 @@ Now that you created a *CustomerManager* that can handle *CustomerRegistered* ev
 **2.2.6: Add supporting files**  
 You need some supporting files (things like settings etc.) in order to run the service.
 
-1. Copy the `appsettings.*.json` files from the *AuditlogService* to your project folder. Remove the *Auditlog* section from the settings files.
+1. Copy the `appsettings.*.json` files from the *AuditlogService* to your project folder and change the contents: 
+   - Change the value of the *Queue* setting in the RabbitMQ configuration block to `CustomerEventHandler`. 
+   - Remove the *Auditlog* section.
 2. Copy the `Properties/launchsettings.json` file from the *AuditlogService* to a `Properties` folder in your project folder.
 3. Add the following snippet to your `.csproj` file:
    ```xml
