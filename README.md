@@ -12,6 +12,40 @@ Pitstop is an open-source .NET sample application that demonstrates the followin
 
 Also, Pitstop demonstrates how to develop and deploy applications using Docker containers.
 
+# Prerequisites
+There are some prerequisites for this workshop:
+
+## Software
+
+First you need an active Internet connection. Additionally you will need to install the following software on your laptop:
+
+- Git ([download](https://git-scm.com/))
+- .NET 5 SDK ([download](https://dotnet.microsoft.com/download/dotnet/5.0))
+- Visual Studio Code ([download](https://code.visualstudio.com/download)) with at least the following extensions installed:
+  - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+- Docker for desktop ([download](https://www.docker.com/products/docker-desktop))
+  - During the installation of Docker, do not switch to Windows containers. We will only use Linux containers.
+
+All scripts in the instructions are Powershell scripts. If you're working on a Mac, it is recommended to install Powershell for Mac:
+
+- Powershell for Mac ([instructions](https://docs.microsoft.com/nl-nl/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-7.1))
+
+## GitHub account
+
+If you do not already have a Github account, create one by going to the [Github website](https://www.github.com/) and click on the *Sign up* link in the top right corner. Make sure you are logged into Github with your account.
+
+## PowerShell
+
+Make sure you can execute PowerShell scripts.
+
+1. Open an elevated PowerShell prompt.
+
+1. Execute the following command:
+
+   ```Powershell
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+   ```
+
 # Labs
 In order to complete the labs, make sure you read (at least) the following sections of the [Pitstop wiki on Github](https://github.com/EdwinVW/pitstop/wiki):
 
@@ -22,59 +56,6 @@ In order to complete the labs, make sure you read (at least) the following secti
 - [Technology used](https://github.com/EdwinVW/pitstop/wiki/Technology%20used)
 
 By now, you should have an understanding of what the Pitstop solution contains and what functionality it offers. Next you will execute several lab assignments in which you will add stuff to the Pitstop solution.
-
-## Lab 0: Preparation
-There are some prerequisites for this workshop. First you need an active Internet connection. Additionally you will need to install the following software on your laptop:
-
-- Docker Community Edition (CE)
-- Visual Studio Code
-- .NET 5 SDK
-- (optional) Git client
-- (optional) Azure Data Studio
-
->If you already have satisfied these prerequisites, you can skip Lab 0 and go directly to Lab 1. 
-
-### Step 0.1: Install prerequisites
-Install the following software (if not already installed) on your laptop: 
-
-#### Docker CE
-Download link: <a href="https://docs.docker.com/install" target="_blank">Docker Community Edition (CE)</a>. 
-
-On Windows, you need Hyper-V to be enabled on your machine in order to install Docker for Windows CE. If you have not enabled Hyper-V, do so now. <a href="https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v" target="_blank">Here</a> you find a description of how to enable Hyper-V on Windows. Make sure to double-check the prerequisites.
-
-For downloading Docker CE, you need to login with your Docker Id. Create one if you don't already have a Docker Id. 
-
-During the installation of Docker CE, do not switch to Windows containers. We will only use Linux containers. After the installation you need to log out and login again (sometimes reboot your machine).
-
-After the installation, start the Docker engine by double clicking the Docker for Windows icon. 
-
-#### Visual Studio Code
-This workshop assumes you are working with Visual Studio Code.  
-Download link: <a href="https://visualstudio.microsoft.com/downloads" target="_blank">Visual Studio Code</a>
-
-#### .NET 5 SDK
-Install the .NET 5 SDK.  
-Download link: <a href="https://www.microsoft.com/net/download" target="_blank">.NET 5 SDK</a>
-
-#### Git client
-Install the Git client for your OS to interact with the Pitstop repo on Github.  
-Download link: <a href="https://git-scm.com/downloads" target="_blank">Git</a> 
-
-#### (Optional) Azure Data Studio
-Install the Azure Data Studio so you can inspect the SQL Server databases used by Pitstop. Use the *User Installer* when working on Windows. 
-Download link: <a href="https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio" target="_blank">Azure Data Studio</a> 
-
-### Step 0.2: Get access to Github
-If you do not already have a Github account, create one by going to the <a href="https://www.github.com" target="_blank">Github website</a> and click on the *Sign up* link in the top right corner. Make sure you are logged into Github with your account. 
-
-### Step 0.3: Make sure you can run PowerShell scripts
-When you're running on a Windows machine, you need to allow execution of the Pitstop PowerShell scripts. Execute the following steps to enable this:
-
-1. Open a PowerShell prompt as Administrator.
-2. Execute the following command:  
-   ```
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
-   ```  
 
 ## Lab 1: Run the applicaton
 In this lab we'll make sure you can run Pitstop on your machine. 
