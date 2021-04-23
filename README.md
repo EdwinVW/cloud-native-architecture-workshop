@@ -57,6 +57,8 @@ In order to complete the labs, make sure you read (at least) the following secti
 
 By now, you should have an understanding of what the Pitstop solution contains and what functionality it offers. Next you will execute several lab assignments in which you will add stuff to the Pitstop solution.
 
+> TIP: When you copy/paste stuff from the lab descriptions, please double-check whether you copied an additional whitespace at the end. In some sitiuations this can lead to issues.
+
 ## Lab 1: Run the applicaton
 In this lab we'll make sure you can run Pitstop on your machine. 
 
