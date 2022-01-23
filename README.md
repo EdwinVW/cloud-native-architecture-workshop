@@ -20,7 +20,7 @@ There are some prerequisites for this workshop:
 First you need an active Internet connection. Additionally you will need to install the following software on your laptop:
 
 - Git ([download](https://git-scm.com/))
-- .NET 5 SDK ([download](https://dotnet.microsoft.com/download/dotnet/5.0))
+- .NET 6 SDK ([download](https://dotnet.microsoft.com/download/dotnet/6.0))
 - Visual Studio Code ([download](https://code.visualstudio.com/download)) with at least the following extensions installed:
   - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 - Docker for desktop ([download](https://www.docker.com/products/docker-desktop))
@@ -93,7 +93,7 @@ In this lab you will add a service to the solution that will react to customer e
 
 The service we will build offers no API and can therefore be a simple console application (just as the existing *NotificationService* for instance). 
 
-### Step 2.1: Create the .NET 5 application
+### Step 2.1: Create the .NET Console application
 First we will add a new service to the solution. 
 
 1. Open a command-prompt or Powershell window.
@@ -127,6 +127,7 @@ Let's open Visual Studio Code to start coding:
 
 1. Start Visual Studio Code.
 2. Select *File*, *Open Folder* and select the *CustomerEventHandler* folder you created in step 3.1. 
+   
    >Visual Studio Code might show you some dialogs about plugins that you can install. For now, just install all plugins that it suggests. It will also asks you to add some 'assets' it needs for building and debugging the project. Acknowledge this with 'Yes'. This will create a '.vscode' folder. You can ignore that folder for now.
    
 3. Open the file *CustomerEventHandler.csproj* by double-clicking on it. This is the file that describes the project. It is pretty straightforward and clean.
@@ -175,7 +176,7 @@ When you want to start listening for messages, you have to call the *Start()* me
 
 This is a class diagram of this pattern:
 ![](img/messaging-cd.png)
- 
+
 1. Add a new *CustomerManager* class to your project.
 2. Add the implementation that handles *CustomerRegistered* messages. For this workshop it doesn't have to be an elaborate handler. Just dump the received message on the console for example. You can reference other event-handlers (e.g. *AuditlogService*) for inspiration.
 
@@ -238,11 +239,11 @@ Now that you have created a functional service, let's run it in a Docker contain
 2. Copy the contents of the dockerfile of the *AuditlogService* and make sure it starts the CustomerEventHandler (in the ENTRYPOINT statement).
 
 > Please take some time to go over the Dockerfile now. You see an example of the Docker multi-stage build mechanism. 
-> - First it starts in a container that is based on an image that contains the full .NET SDK (*mcr.microsoft.com/dotnet/sdk:5.0*). We call this *build-env* for later reference.
+> - First it starts in a container that is based on an image that contains the full .NET SDK. We call this *build-env* for later reference.
 > - After that it sets the folder */app* as the current working-folder for the build. It copies the *.csproj* file of your project into to the working-folder. 
 > - Then it restores all the dependencies by running `dotnet restore`. 
 > - After the restore, it copies the rest of the files to the working-folder and publishes the application by running `dotnet publish -c Release -o out`. It builds the *Release* configuration and outputs the result in the folder *out* within the working-folder.
-> - Now it starts the second phase which runs in a container based on the .NET run-time container (*mcr.microsoft.com/dotnet/runtime:5.10*). This container does not contain the entire .NET SDK - so it's much smaller.
+> - Now it starts the second phase which runs in a container based on the .NET run-time container. This container does not contain the entire .NET SDK - so it's much smaller.
 > - It then copies the output from the other build phase (that was called *build-env*) to the local folder within the container.
 > - Finally it specifies the entry-point - the command to execute when the container starts. In this case it specifies the command `dotnet` and as argument the assembly that was created during the build. This will start the *CustomerEventHandler* console application you've created.
 
@@ -280,7 +281,7 @@ The last step in this lab is to extend the docker-compose file to include your s
 
 1. Open the *docker-compose.yml* file in the *src* folder of the Pitstop repo in Visual Studio Code.
 2. Add this snippet to the *docker-compose* file just before the webapp part:
- 
+
    ```
      customereventhandler:
        image: pitstop/customereventhandler:1.0
