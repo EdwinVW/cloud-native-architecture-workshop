@@ -141,7 +141,7 @@ The CustomerEventHandler service will need to receive messages from the message-
 You need to add a reference to the *Pitstop.Infrastructure.Messaging* nuget package. Execute the following steps to add a reference to the package: 
 
 1. Open the terminal window in Visual Studio Code using the *Terminal* menu.
-2. Type the following command in this window: `dotnet add package PitStop.Infrastructure.Messaging`. 
+2. Type the following command in this window: `dotnet add package Pitstop.Infrastructure.Messaging`. 
 3. Visual Studio Code will detect changes in the references and automatically restore the references.
 
 **2.2.3: Add event definition**  
